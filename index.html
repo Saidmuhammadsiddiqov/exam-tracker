@@ -1,0 +1,227 @@
+  <!DOCTYPE html>
+  <html lang="uz">
+  <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Exam Tracker — O‘quvchi</title>
+  <style>
+  body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    color: #fff;
+    background: url("maktab.png") center/cover no-repeat;
+    background-attachment: fixed;
+    backdrop-filter: blur(8px);
+    min-height: 100vh;
+    overflow: hidden;
+  }
+
+  /* Chap menyu */
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 230px;
+    height: 100vh;
+    background: rgba(0,0,0,0.8);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding-top: 20px;
+  }
+  .sidebar ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .sidebar li {
+    padding: 16px 20px;
+    cursor: pointer;
+    transition: 0.2s;
+  }
+  .sidebar li:hover {
+    background: rgba(255,255,255,0.1);
+  }
+  .sidebar .student-info {
+    padding: 15px;
+    text-align: center;
+    font-size: 14px;
+    border-top: 1px solid rgba(255,255,255,0.3);
+  }
+
+  /* Asosiy qism */
+  .main {
+    margin-left: 230px;
+    padding: 20px;
+    height: 100vh;
+    overflow-y: auto;
+  }
+  header {
+    position: sticky;
+    top: 0;
+    background: rgba(0,0,0,0.7);
+    padding: 12px 20px;
+    font-size: 18px;
+    text-align: center;
+    border-radius: 8px;
+    backdrop-filter: blur(6px);
+    z-index: 5;
+  }
+  .card {
+    background: rgba(255,255,255,0.1);
+    padding: 20px;
+    border-radius: 12px;
+    margin-top: 20px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+  }
+  h2 {
+    text-align: center;
+    color: #fff;
+  }
+  button, input, select {
+    padding: 10px;
+    border-radius: 8px;
+    border: none;
+    font-size: 14px;
+  }
+  button {
+    background: #2563eb;
+    color: #fff;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.2s;
+  }
+  button:hover { background: #1e40af; }
+  input, select {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+
+  /* Bo‘limlar */
+  .section { display: none; }
+  .active { display: block; }
+
+  .news-item {
+    background: rgba(255,255,255,0.2);
+    padding: 10px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+  }
+  </style>
+  </head>
+  <body>
+
+  <!-- Chap menyu -->
+  <div class="sidebar">
+    <ul>
+      <li onclick="showSection('home')">🏠 Bosh sahifa</li>
+      <li onclick="showSection('exams')">🧮 Imtihonlar</li>
+      <li onclick="showSection('results')">📊 Natijalar</li>
+    </ul>
+    <div class="student-info" id="studentInfo">...</div>
+  </div>
+
+  <!-- Asosiy qism -->
+  <div class="main">
+    <header id="headerInfo"></header>
+
+    <div id="register" class="card">
+      <h2>O‘quvchi ma’lumotlarini kiriting</h2>
+      <input type="text" id="fname" placeholder="Ism">
+      <input type="text" id="lname" placeholder="Familiya">
+      <select id="classNum">
+        <option value="">Sinfni tanlang</option>
+        <option>5</option><option>6</option><option>7</option>
+        <option>8</option><option>9</option><option>10</option><option>11</option>
+      </select>
+      <button onclick="saveStudent()">Saqlash</button>
+    </div>
+
+    <div id="home" class="section card">
+      <h2>🏫 Maktab yangiliklari</h2>
+      <div id="news-list"></div>
+    </div>
+
+    <div id="exams" class="section card">
+      <h2>🧮 Imtihonlar</h2>
+      <div id="exam-list"></div>
+    </div>
+
+    <div id="results" class="section card">
+      <h2>📊 Natijalar</h2>
+      <div id="results-list"></div>
+    </div>
+  </div>
+
+  <script>
+  const NEWS_KEY = "examtracker_news";
+  const EXAMS_KEY = "examtracker_exams";
+  const RESULTS_KEY = "examtracker_results";
+  const STUDENT_KEY = "examtracker_student";
+
+  function loadData(key){ return JSON.parse(localStorage.getItem(key) || "[]"); }
+
+  function saveStudent(){
+    const fname = document.getElementById("fname").value.trim();
+    const lname = document.getElementById("lname").value.trim();
+    const cls = document.getElementById("classNum").value;
+    if(!fname || !lname || !cls) return alert("Barcha maydonlarni to‘ldiring!");
+    localStorage.setItem(STUDENT_KEY, JSON.stringify({fname, lname, cls}));
+    showStudentInfo();
+  }
+
+  function showStudentInfo(){
+    const data = JSON.parse(localStorage.getItem(STUDENT_KEY) || "null");
+    const reg = document.getElementById("register");
+    if(!data){ reg.style.display = "block"; return; }
+
+    reg.style.display = "none";
+    document.getElementById("studentInfo").innerHTML =
+      `<b>${data.fname} ${data.lname}</b><br>${data.cls}-sinf`;
+    document.getElementById("headerInfo").innerHTML =
+      `${data.fname} ${data.lname} — ${data.cls}-sinf`;
+
+    document.getElementById("home").classList.add("active");
+    renderAll();
+  }
+
+  function showSection(id){
+    document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));
+    document.getElementById(id).classList.add("active");
+  }
+
+  function renderAll(){
+    renderNews();
+    renderExams();
+    renderResults();
+  }
+
+  function renderNews(){
+    const list = loadData(NEWS_KEY);
+    document.getElementById("news-list").innerHTML = 
+      list.length ? list.map(n=>`<div class="news-item">${n.text}</div>`).join('') 
+      : "<p>Yangiliklar hozircha yo‘q.</p>";
+  }
+
+  function renderExams(){
+    const list = loadData(EXAMS_KEY);
+    const student = JSON.parse(localStorage.getItem(STUDENT_KEY) || "{}");
+    const filtered = list.filter(e=>e.cls == student.cls);
+    document.getElementById("exam-list").innerHTML = 
+      filtered.length ? filtered.map(e=>`<p><b>${e.title}</b> — ${e.date}</p>`).join('') 
+      : "<p>Imtihonlar mavjud emas.</p>";
+  }
+
+  function renderResults(){
+    const list = loadData(RESULTS_KEY);
+    const student = JSON.parse(localStorage.getItem(STUDENT_KEY) || "{}");
+    const filtered = list.filter(r=>r.name?.includes(student.fname) && r.cls == student.cls);
+    document.getElementById("results-list").innerHTML =
+      filtered.length ? filtered.map(r=>`<p><b>${r.exam}</b>: ${r.score} ball</p>`).join('') 
+      : "<p>Natijalar mavjud emas.</p>";
+  }
+
+  showStudentInfo();
+  </script>
+  </body>
+  </html>

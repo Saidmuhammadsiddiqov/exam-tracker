@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Panel — Exam Tracker</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: url("maktab.png") center/cover no-repeat;
+      backdrop-filter: blur(8px);
+      color: #fff;
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      background-attachment: fixed;
+    }
+    .container {
+      max-width: 800px;
+      margin: 40px auto;
+      background: rgba(0,0,0,0.7);
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+    }
+    h1, h2 { text-align: center; margin-bottom: 20px; }
+    label { display: block; margin: 10px 0 4px; font-weight: bold; }
+    input, select, textarea, button {
+      width: 100%; padding: 10px; border-radius: 8px; border: none;
+      margin-bottom: 12px; font-size: 14px;
+    }
+    input, select, textarea { background: #fff; color: #111; }
+    button { background: #2563eb; color: white; cursor: pointer; font-weight: bold; }
+    button:hover { background: #1e40af; }
+    .section { margin-top: 30px; border-top: 1px solid rgba(255,255,255,0.2); padding-top: 20px; }
+    .list { background: rgba(255,255,255,0.1); padding: 10px; border-radius: 10px; margin-top: 10px; }
+    .item {
+      background: rgba(255,255,255,0.1);
+      margin: 5px 0;
+      padding: 8px 10px;
+      border-radius: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .muted { color: #ccc; font-size: 14px; text-align: center; }
+    .del { background: crimson; border: none; color: #fff; padding: 4px 8px; border-radius: 6px; cursor: pointer; }
+    .del:hover { background: darkred; }
+  </style>
+</head>
+<body>
+  <div class="container" id="adminPanel" style="display:none">
+    <h1>🛠️ Admin Panel</h1>
+
+    <!-- Yangilik qo‘shish -->
+    <div class="section">
+      <h2>📰 Yangilik qo‘shish</h2>
+      <textarea id="newsText" placeholder="Yangilik matnini kiriting"></textarea>
+      <button onclick="addNews()">Qo‘shish</button>
+      <div class="list" id="newsList"></div>
+    </div>
+
+    <!-- Imtihon qo‘shish -->
+    <div class="section">
+      <h2>🧮 Imtihon qo‘shish</h2>
+      <input id="examTitle" placeholder="Imtihon nomi">
+      <select id="examClass">
+        <option value="">Sinf tanlang</option>
+        <option>5</option><option>6</option><option>7</option>
+        <option>8</option><option>9</option><option>10</option><option>11</option>
+      </select>
+      <input type="date" id="examDate">
+      <button onclick="addExam()">Qo‘shish</button>
+      <div class="list" id="examList"></div>
+    </div>
+
+    <!-- Natija qo‘shish -->
+    <div class="section">
+      <h2>📊 Natija qo‘shish</h2>
+      <input id="studentName" placeholder="Ism Familiya">
+      <select id="studentClass">
+        <option value="">Sinf tanlang</option>
+        <option>5</option><option>6</option><option>7</option>
+        <option>8</option><option>9</option><option>10</option><option>11</option>
+      </select>
+      <input type="number" id="studentScore" placeholder="Ball">
+      <input id="studentExam" placeholder="Imtihon nomi">
+      <button onclick="addResult()">Qo‘shish</button>
+      <div class="list" id="resultList"></div>
+    </div>
+  </div>
+
+  <div id="locked" class="muted" style="margin-top:100px;">
+    ⛔ Kirish taqiqlangan. URL manzil oxiriga ?key=12345 yozing.
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

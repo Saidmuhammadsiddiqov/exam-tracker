@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ro‘yxatdan o‘tish — Exam Tracker</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: url("maktab.png") center/cover no-repeat;
+      color: white;
+      backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .card {
+      background: rgba(0,0,0,0.7);
+      padding: 30px;
+      border-radius: 14px;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.4);
+      width: 320px;
+      text-align: center;
+    }
+    input, select, button {
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0;
+      border-radius: 8px;
+      border: none;
+      font-size: 15px;
+    }
+    input, select { color: #111; }
+    button { background: #2563eb; color: white; cursor: pointer; font-weight: bold; }
+    button:hover { background: #1e40af; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h2>O‘quvchi ro‘yxatdan o‘tishi</h2>
+    <input type="text" id="fname" placeholder="Ism">
+    <input type="text" id="lname" placeholder="Familiya">
+    <select id="classNum">
+      <option value="">Sinf tanlang</option>
+      <option>5</option><option>6</option><option>7</option>
+      <option>8</option><option>9</option><option>10</option><option>11</option>
+    </select>
+    <button onclick="registerStudent()">Kirish</button>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
